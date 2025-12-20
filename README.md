@@ -102,28 +102,8 @@ winget install TorProject.TorBrowser
 
 ## Installation
 
-### Linux / macOS
-
 ```bash
-# Clone the repository
-git clone https://github.com/BitcoinMonk/mempool-mcp.git
-cd mempool-mcp
-
-# Create virtual environment and install
-python3 -m venv venv
-./venv/bin/pip install -e .
-```
-
-### Windows
-
-```powershell
-# Clone the repository
-git clone https://github.com/BitcoinMonk/mempool-mcp.git
-cd mempool-mcp
-
-# Create virtual environment and install
-python -m venv venv
-.\venv\Scripts\pip install -e .
+pip install mempool-mcp
 ```
 
 ---
@@ -132,29 +112,12 @@ python -m venv venv
 
 ### Quick Start (Public API)
 
-After cloning and installing, add the server with one command:
-
-**Linux/macOS:**
 ```bash
 claude mcp add mempool \
   --scope user \
   --transport stdio \
   --env MEMPOOL_API_URL=https://mempool.space/api \
-  -- $(pwd)/venv/bin/python -m mempool_mcp.server
-```
-
-**Windows (PowerShell):**
-```powershell
-claude mcp add mempool `
-  --scope user `
-  --transport stdio `
-  --env MEMPOOL_API_URL=https://mempool.space/api `
-  -- "$PWD\venv\Scripts\python.exe" -m mempool_mcp.server
-```
-
-**Windows (CMD):**
-```cmd
-claude mcp add mempool --scope user --transport stdio --env MEMPOOL_API_URL=https://mempool.space/api -- "%CD%\venv\Scripts\python.exe" -m mempool_mcp.server
+  -- mempool-mcp
 ```
 
 Restart Claude Code, then ask: *"What's the current Bitcoin block height?"*
@@ -169,30 +132,12 @@ Add to your `~/.claude.json` (global) or project `.mcp.json`:
 
 Use the public mempool.space API. No additional setup required.
 
-**Linux/macOS:**
 ```json
 {
   "mcpServers": {
     "mempool": {
       "type": "stdio",
-      "command": "/path/to/mempool-mcp/venv/bin/python",
-      "args": ["-m", "mempool_mcp.server"],
-      "env": {
-        "MEMPOOL_API_URL": "https://mempool.space/api"
-      }
-    }
-  }
-}
-```
-
-**Windows:**
-```json
-{
-  "mcpServers": {
-    "mempool": {
-      "type": "stdio",
-      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
-      "args": ["-m", "mempool_mcp.server"],
+      "command": "mempool-mcp",
       "env": {
         "MEMPOOL_API_URL": "https://mempool.space/api"
       }
@@ -218,8 +163,7 @@ Connect to your own Mempool instance running locally or on your network.
   "mcpServers": {
     "mempool": {
       "type": "stdio",
-      "command": "/path/to/mempool-mcp/venv/bin/python",
-      "args": ["-m", "mempool_mcp.server"],
+      "command": "mempool-mcp",
       "env": {
         "MEMPOOL_API_URL": "http://localhost:8999/api"
       }
@@ -259,8 +203,7 @@ Connect to Mempool via Tor for maximum privacy. The server will **automatically 
   "mcpServers": {
     "mempool": {
       "type": "stdio",
-      "command": "/path/to/mempool-mcp/venv/bin/python",
-      "args": ["-m", "mempool_mcp.server"],
+      "command": "mempool-mcp",
       "env": {
         "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
       }
@@ -439,7 +382,7 @@ For self-hosted instances with self-signed certificates:
 
 ### Server not showing in Claude
 1. Restart Claude Code after modifying `~/.claude.json`
-2. Check the path to Python is correct
+2. Make sure `mempool-mcp` is in your PATH (try running `mempool-mcp --help`)
 3. Run `/mcp` in Claude to see server status
 
 ---
@@ -452,6 +395,7 @@ MIT
 
 ## Links
 
+- [PyPI Package](https://pypi.org/project/mempool-mcp/)
 - [Mempool.space](https://mempool.space)
 - [Mempool API Documentation](https://mempool.space/docs/api/rest)
 - [MCP Protocol](https://modelcontextprotocol.io)
