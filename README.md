@@ -1,6 +1,6 @@
 # Mempool MCP Server
 
-An MCP (Model Context Protocol) server that connects AI assistants like Claude to the [Mempool.space](https://mempool.space) Bitcoin explorer API. Query blockchain data, mempool statistics, fees, mining pools, and Lightning Network information directly through natural language.
+An MCP server that connects AI assistants like Claude to mempool.space or your own self-hosted instance. Query blockchain data, mempool statistics, fees, mining pools, and Lightning Network information directly through natural language.
 
 ## What is this?
 
@@ -35,7 +35,7 @@ The public mempool.space API has rate limits that may interrupt heavy usage. **R
 
 ### Benefits of Self-Hosting
 
-Running your own [Mempool instance](https://github.com/mempool/mempool) eliminates these restrictions:
+Running your own mempool instance eliminates these restrictions:
 
 | | Public API | Self-Hosted |
 |---|---|---|
@@ -44,6 +44,9 @@ Running your own [Mempool instance](https://github.com/mempool/mempool) eliminat
 | **Privacy** | Queries visible to mempool.space | Fully private |
 | **Uptime** | Depends on mempool.space | You control it |
 | **Data freshness** | Real-time | Real-time (your own node) |
+| **Network support** | None | Strengthens Bitcoin decentralization |
+
+Running a full Bitcoin node to power your Mempool instance also directly supports the network—every node helps validate and relay transactions, improving Bitcoin's decentralization and resilience.
 
 ### Self-Hosted Options
 
