@@ -1,0 +1,215 @@
+{
+  "_comment": "Example MCP configurations for mempool-mcp. Copy the appropriate config to ~/.claude.json",
+
+  "linux_macos": {
+    "_comment": "Linux and macOS configurations - replace /path/to/mempool-mcp with your install path",
+
+    "public_api": {
+      "_description": "Connect to the public mempool.space API",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/api"
+      }
+    },
+
+    "testnet": {
+      "_description": "Connect to mempool.space testnet API",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/testnet/api"
+      }
+    },
+
+    "signet": {
+      "_description": "Connect to mempool.space signet API",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/signet/api"
+      }
+    },
+
+    "local_instance": {
+      "_description": "Connect to a local Mempool instance",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://localhost:8999/api"
+      }
+    },
+
+    "local_with_ssl": {
+      "_description": "Connect to a local instance with custom CA certificate (e.g., Start9, Umbrel)",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.your-node.local/api",
+        "MEMPOOL_CA_CERT": "/path/to/your-ca-certificate.crt"
+      }
+    },
+
+    "tor_auto": {
+      "_description": "Connect via Tor (auto-starts Tor if not running)",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
+      }
+    },
+
+    "tor_manual": {
+      "_description": "Connect via Tor (requires Tor already running)",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
+        "MEMPOOL_TOR_AUTO_START": "false",
+        "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9050"
+      }
+    },
+
+    "tor_browser_proxy": {
+      "_description": "Connect via Tor Browser's proxy (port 9150)",
+      "type": "stdio",
+      "command": "/path/to/mempool-mcp/venv/bin/python",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
+        "MEMPOOL_TOR_AUTO_START": "false",
+        "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9150"
+      }
+    }
+  },
+
+  "windows": {
+    "_comment": "Windows configurations - replace C:\\path\\to\\mempool-mcp with your install path",
+
+    "public_api": {
+      "_description": "Connect to the public mempool.space API",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/api"
+      }
+    },
+
+    "testnet": {
+      "_description": "Connect to mempool.space testnet API",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/testnet/api"
+      }
+    },
+
+    "signet": {
+      "_description": "Connect to mempool.space signet API",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.space/signet/api"
+      }
+    },
+
+    "local_instance": {
+      "_description": "Connect to a local Mempool instance",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://localhost:8999/api"
+      }
+    },
+
+    "local_with_ssl": {
+      "_description": "Connect to a local instance with custom CA certificate",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "https://mempool.your-node.local/api",
+        "MEMPOOL_CA_CERT": "C:\\path\\to\\your-ca-certificate.crt"
+      }
+    },
+
+    "tor_auto": {
+      "_description": "Connect via Tor (auto-starts Tor if installed)",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
+      }
+    },
+
+    "tor_manual": {
+      "_description": "Connect via Tor (requires Tor already running)",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
+        "MEMPOOL_TOR_AUTO_START": "false",
+        "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9050"
+      }
+    },
+
+    "tor_browser_proxy": {
+      "_description": "Connect via Tor Browser's proxy (port 9150)",
+      "type": "stdio",
+      "command": "C:\\path\\to\\mempool-mcp\\venv\\Scripts\\python.exe",
+      "args": ["-m", "mempool_mcp.server"],
+      "env": {
+        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
+        "MEMPOOL_TOR_AUTO_START": "false",
+        "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9150"
+      }
+    }
+  },
+
+  "usage": {
+    "_comment": "How to use these examples",
+    "steps": [
+      "1. Copy the appropriate config from linux_macos or windows section",
+      "2. Replace the path placeholder with your actual mempool-mcp installation path",
+      "3. Add to ~/.claude.json under 'mcpServers.mempool'",
+      "4. Restart Claude Code"
+    ],
+    "example_claude_json_linux": {
+      "mcpServers": {
+        "mempool": {
+          "type": "stdio",
+          "command": "/home/youruser/mempool-mcp/venv/bin/python",
+          "args": ["-m", "mempool_mcp.server"],
+          "env": {
+            "MEMPOOL_API_URL": "https://mempool.space/api"
+          }
+        }
+      }
+    },
+    "example_claude_json_windows": {
+      "mcpServers": {
+        "mempool": {
+          "type": "stdio",
+          "command": "C:\\Users\\YourUser\\mempool-mcp\\venv\\Scripts\\python.exe",
+          "args": ["-m", "mempool_mcp.server"],
+          "env": {
+            "MEMPOOL_API_URL": "https://mempool.space/api"
+          }
+        }
+      }
+    }
+  }
+}
