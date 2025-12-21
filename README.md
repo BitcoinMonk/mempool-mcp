@@ -50,11 +50,11 @@ Running a full Bitcoin node to power your Mempool instance also directly support
 
 ### Self-Hosted Options
 
-- **[Mempool](github.com/mempool/mempool)** - Run the full stack yourself
-- **[Start9](start9.com/)** - One-click install on Start9 Embassy
-- **[Umbrel](umbrel.com/)** - One-click install on Umbrel
-- **[RaspiBlitz](raspiblitz.org/)** - Included in RaspiBlitz
-- **[MyNode](mynodebtc.com/)** - Included in MyNode
+- **[Mempool](https://github.com/mempool/mempool)** - Run the full stack yourself
+- **[Start9](https://start9.com/)** - One-click install on Start9 Embassy
+- **[Umbrel](https://umbrel.com/)** - One-click install on Umbrel
+- **[RaspiBlitz](https://raspiblitz.org/)** - Included in RaspiBlitz
+- **[MyNode](https://mynodebtc.com/)** - Included in MyNode
 
 Once you have a self-hosted instance, just point `MEMPOOL_API_URL` to it and enjoy unlimited queries.
 
