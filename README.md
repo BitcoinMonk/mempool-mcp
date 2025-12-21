@@ -123,7 +123,20 @@ claude mcp add mempool-tor mempool-mcp --scope user --env MEMPOOL_API_URL=mempoo
 
 ## Installation
 
+**Linux (Debian/Ubuntu):**
 ```bash
+sudo apt install pipx
+pipx install mempool-mcp
+```
+
+**Linux (other) / macOS:**
+```bash
+pip install mempool-mcp
+# Or use pipx if pip is blocked
+```
+
+**Windows:**
+```powershell
 pip install mempool-mcp
 ```
 
