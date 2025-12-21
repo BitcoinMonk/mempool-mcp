@@ -50,11 +50,11 @@ Running a full Bitcoin node to power your Mempool instance also directly support
 
 ### Self-Hosted Options
 
-- **[Mempool](https://github.com/mempool/mempool)** - Run the full stack yourself
-- **[Start9](https://start9.com/)** - One-click install on Start9 Embassy
-- **[Umbrel](https://umbrel.com/)** - One-click install on Umbrel
-- **[RaspiBlitz](https://raspiblitz.org/)** - Included in RaspiBlitz
-- **[MyNode](https://mynodebtc.com/)** - Included in MyNode
+- **[Mempool](github.com/mempool/mempool)** - Run the full stack yourself
+- **[Start9](start9.com/)** - One-click install on Start9 Embassy
+- **[Umbrel](umbrel.com/)** - One-click install on Umbrel
+- **[RaspiBlitz](raspiblitz.org/)** - Included in RaspiBlitz
+- **[MyNode](mynodebtc.com/)** - Included in MyNode
 
 Once you have a self-hosted instance, just point `MEMPOOL_API_URL` to it and enjoy unlimited queries.
 
@@ -92,11 +92,32 @@ brew install tor
 ```
 
 **Windows:**
-Download from [torproject.org](https://www.torproject.org/download/) or use:
+
+There are two options for Tor on Windows:
+
+**Option A: Tor Expert Bundle (Recommended for MCP)**
+
+The Expert Bundle runs Tor as a background daemon on port 9050. This is what the MCP server expects by default.
+
+1. Download from [torproject.org/download/tor](www.torproject.org/download/tor/)
+2. Extract to `C:\tor`
+3. Add `C:\tor` to your system PATH
+4. Restart your terminal
+
+Or use Chocolatey:
 ```powershell
-winget install TorProject.TorBrowser
-# Or install Tor Expert Bundle for command-line tor.exe
+choco install tor
 ```
+
+**Option B: Tor Browser**
+
+If you already have Tor Browser installed, you can use it instead. Tor Browser runs on port **9150** (not 9050), so you need to configure the MCP server accordingly:
+
+```powershell
+claude mcp add mempool-tor mempool-mcp --scope user --env MEMPOOL_API_URL=mempoolhqx4isw62xs7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api --env MEMPOOL_TOR_PROXY=socks5://127.0.0.1:9150 --env MEMPOOL_TOR_AUTO_START=false
+```
+
+> **Important:** Tor Browser must be running when you use the MCP server with this configuration.
 
 ---
 
@@ -112,13 +133,20 @@ pip install mempool-mcp
 
 ### Quick Start (Public API)
 
+**Linux/macOS:**
 ```bash
-claude mcp add mempool \
-  --scope user \
-  --transport stdio \
-  --env MEMPOOL_API_URL=https://mempool.space/api \
-  -- mempool-mcp
+claude mcp add mempool mempool-mcp --scope user --env MEMPOOL_API_URL=mempool.space/api
 ```
+
+**Windows (PowerShell):**
+```powershell
+claude mcp add mempool mempool-mcp --scope user --env MEMPOOL_API_URL=mempool.space/api
+```
+
+> **Note:** On Windows, if `mempool-mcp` is not found, use the full path:
+> ```powershell
+> claude mcp add mempool "$env:APPDATA\Python\Python313\Scripts\mempool-mcp.exe" --scope user --env MEMPOOL_API_URL=mempool.space/api
+> ```
 
 Restart Claude Code, then ask: *"What's the current Bitcoin block height?"*
 
@@ -139,17 +167,11 @@ Use the public mempool.space API. No additional setup required.
       "type": "stdio",
       "command": "mempool-mcp",
       "env": {
-        "MEMPOOL_API_URL": "https://mempool.space/api"
+        "MEMPOOL_API_URL": "mempool.space/api"
       }
     }
   }
 }
-```
-
-**Testnet/Signet:**
-```json
-"MEMPOOL_API_URL": "https://mempool.space/testnet/api"
-"MEMPOOL_API_URL": "https://mempool.space/signet/api"
 ```
 
 ---
@@ -205,7 +227,7 @@ Connect to Mempool via Tor for maximum privacy. The server will **automatically 
       "type": "stdio",
       "command": "mempool-mcp",
       "env": {
-        "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
+        "MEMPOOL_API_URL": "mempoolhqx4isw62xs7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
       }
     }
   }
@@ -216,7 +238,7 @@ Connect to Mempool via Tor for maximum privacy. The server will **automatically 
 ```json
 {
   "env": {
-    "MEMPOOL_API_URL": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
+    "MEMPOOL_API_URL": "mempoolhqx4isw62xs7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api",
     "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9150"
   }
 }
@@ -370,10 +392,52 @@ Once configured, ask your AI assistant:
 ### "MEMPOOL_API_URL not set"
 Make sure your MCP configuration includes the `env` section with `MEMPOOL_API_URL`.
 
+### MCP server not connecting / command not found (Windows)
+
+After `pip install mempool-mcp`, the executable may not be in your PATH. Solutions:
+
+**Option 1: Use the full path in the MCP config:**
+```powershell
+claude mcp add mempool "$env:APPDATA\Python\Python313\Scripts\mempool-mcp.exe" --scope user --env MEMPOOL_API_URL=mempool.space/api
+```
+
+**Option 2: Add Python Scripts to PATH:**
+```powershell
+[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:APPDATA\Python\Python313\Scripts", "User")
+```
+Then restart your terminal.
+
 ### Tor connection issues
+
+**"Tor is not installed" error:**
+- **Linux/macOS:** Install with your package manager (apt, dnf, pacman, brew)
+- **Windows:** Install [Tor Expert Bundle](www.torproject.org/download/tor/) and add to PATH
+
+**Tor proxy connection failed:**
 1. Verify Tor is installed: `which tor` (Linux/macOS) or `where tor` (Windows)
-2. Check if Tor is running: `curl --socks5-hostname 127.0.0.1:9050 https://check.torproject.org`
-3. Try setting `MEMPOOL_TOR_AUTO_START=false` and start Tor manually
+2. Check the port:
+   - Tor daemon/Expert Bundle uses port **9050** (default)
+   - Tor Browser uses port **9150**
+3. Test connectivity:
+   ```bash
+   # Linux/macOS
+   curl --socks5-hostname 127.0.0.1:9050 check.torproject.org
+
+   # Windows PowerShell
+   Test-NetConnection -ComputerName 127.0.0.1 -Port 9050
+   ```
+
+**Using Tor Browser instead of Tor daemon:**
+
+Set these environment variables in your MCP config:
+```json
+{
+  "env": {
+    "MEMPOOL_TOR_PROXY": "socks5://127.0.0.1:9150",
+    "MEMPOOL_TOR_AUTO_START": "false"
+  }
+}
+```
 
 ### SSL certificate errors
 For self-hosted instances with self-signed certificates:
@@ -395,8 +459,8 @@ MIT
 
 ## Links
 
-- [PyPI Package](https://pypi.org/project/mempool-mcp/)
-- [Mempool.space](https://mempool.space)
-- [Mempool API Documentation](https://mempool.space/docs/api/rest)
-- [MCP Protocol](https://modelcontextprotocol.io)
-- [Claude Code](https://claude.ai/code)
+- [PyPI Package](pypi.org/project/mempool-mcp/)
+- [Mempool.space](mempool.space)
+- [Mempool API Documentation](mempool.space/docs/api/rest)
+- [MCP Protocol](modelcontextprotocol.io)
+- [Claude Code](claude.ai/code)

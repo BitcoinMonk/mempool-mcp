@@ -6,6 +6,7 @@ import os
 import shutil
 import socket
 import subprocess
+import sys
 import tempfile
 import time
 from typing import Any
@@ -114,13 +115,26 @@ class TorManager:
         # Check if tor binary exists
         tor_path = shutil.which("tor")
         if not tor_path:
-            raise RuntimeError(
-                "Tor is not installed. Please install it:\n"
-                "  Ubuntu/Debian: sudo apt install tor\n"
-                "  Fedora: sudo dnf install tor\n"
-                "  Arch: sudo pacman -S tor\n"
-                "  macOS: brew install tor"
-            )
+            if sys.platform == "win32":
+                raise RuntimeError(
+                    "Tor is not installed or not in PATH. Install Tor Expert Bundle:\n"
+                    "  1. Download: www.torproject.org/download/tor/\n"
+                    "  2. Extract to C:\\tor\n"
+                    "  3. Add C:\\tor to your system PATH\n"
+                    "  4. Restart your terminal\n\n"
+                    "Or use Chocolatey: choco install tor\n\n"
+                    "Alternative: Use Tor Browser (port 9150) with these env vars:\n"
+                    "  MEMPOOL_TOR_PROXY=socks5://127.0.0.1:9150\n"
+                    "  MEMPOOL_TOR_AUTO_START=false"
+                )
+            else:
+                raise RuntimeError(
+                    "Tor is not installed. Please install it:\n"
+                    "  Ubuntu/Debian: sudo apt install tor\n"
+                    "  Fedora: sudo dnf install tor\n"
+                    "  Arch: sudo pacman -S tor\n"
+                    "  macOS: brew install tor"
+                )
 
         # Create temp directory for Tor data
         self._data_dir = tempfile.mkdtemp(prefix="mempool_tor_")
