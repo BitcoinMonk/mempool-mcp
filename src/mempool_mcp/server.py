@@ -1,6 +1,7 @@
 """MCP server for Mempool.space Bitcoin explorer API."""
 
 import asyncio
+import json
 import logging
 import os
 import sys
@@ -10,48 +11,84 @@ from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
 
 from .client import MempoolClient
-from .tools.general import get_general_tools, handle_general_tool
-from .tools.mempool import get_mempool_tools, handle_mempool_tool
-from .tools.transactions import get_transaction_tools, handle_transaction_tool
-from .tools.blocks import get_block_tools, handle_block_tool
-from .tools.addresses import get_address_tools, handle_address_tool
-from .tools.mining import get_mining_tools, handle_mining_tool
-from .tools.lightning import get_lightning_tools, handle_lightning_tool
 
 # Disable logging to avoid interfering with MCP stdio communication
 logging.basicConfig(level=logging.CRITICAL)
 
 
+# Only expose the 3 tools we actually use (saves ~28k tokens of context)
+ENABLED_TOOLS = [
+    Tool(
+        name="get_block_tip_height",
+        description="Get the current block height (chain tip).",
+        inputSchema={
+            "type": "object",
+            "properties": {},
+            "required": [],
+        },
+    ),
+    Tool(
+        name="get_historical_price",
+        description="Get historical Bitcoin price data.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string",
+                    "description": "Currency code (default: USD)",
+                    "default": "USD",
+                },
+                "timestamp": {
+                    "type": "integer",
+                    "description": "Unix timestamp for historical price (optional)",
+                },
+            },
+            "required": [],
+        },
+    ),
+    Tool(
+        name="get_mining_pools",
+        description="Get mining pool statistics for a time interval. Shows pool distribution, block counts, and hashrate share.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "interval": {
+                    "type": "string",
+                    "description": "Time interval: 24h, 3d, 1w, 1m, 3m, 6m, 1y, 2y, 3y, all (default: 1w)",
+                    "default": "1w",
+                },
+            },
+            "required": [],
+        },
+    ),
+]
+
+
 def get_all_tools() -> list[Tool]:
-    """Get all tool definitions from all modules."""
-    tools = []
-    tools.extend(get_general_tools())
-    tools.extend(get_mempool_tools())
-    tools.extend(get_transaction_tools())
-    tools.extend(get_block_tools())
-    tools.extend(get_address_tools())
-    tools.extend(get_mining_tools())
-    tools.extend(get_lightning_tools())
-    return tools
+    """Get enabled tool definitions."""
+    return ENABLED_TOOLS
 
 
 async def handle_tool(name: str, arguments: dict, client: MempoolClient) -> list[TextContent]:
-    """Route tool calls to the appropriate handler."""
-    # Try each handler in order until one handles the tool
-    handlers = [
-        handle_general_tool,
-        handle_mempool_tool,
-        handle_transaction_tool,
-        handle_block_tool,
-        handle_address_tool,
-        handle_mining_tool,
-        handle_lightning_tool,
-    ]
+    """Handle the 3 enabled tools."""
+    try:
+        if name == "get_block_tip_height":
+            result = await client.get_block_tip_height()
+            return [TextContent(type="text", text=f"Current block height: {result}")]
 
-    for handler in handlers:
-        result = await handler(name, arguments, client)
-        if result is not None:
-            return result
+        elif name == "get_historical_price":
+            currency = arguments.get("currency", "USD")
+            timestamp = arguments.get("timestamp")
+            result = await client.get_historical_price(currency, timestamp)
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+
+        elif name == "get_mining_pools":
+            interval = arguments.get("interval", "1w")
+            result = await client.get_mining_pools(interval)
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+
+    except Exception as e:
+        return [TextContent(type="text", text=f"Error: {str(e)}")]
 
     return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
